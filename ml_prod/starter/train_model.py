@@ -4,7 +4,7 @@ Script to train machine learning model.
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from typing import List, Dict
+from typing import List, Dict, Any
 from pathlib import Path
 import pandas as pd
 import numpy as np
@@ -125,6 +125,42 @@ def set_encoders(dataframe: pd.DataFrame, categorical_features: List[str], label
             with open(output_file, 'wb') as encoder_file:
                 pickle.dump(temp_encoder, encoder_file)
     return out_encoders
+
+
+def compute_performance_on_slice(dataframe: pd.DataFrame, feature: str, label_column: str,
+                                 prediction_column: str = 'pred') -> Dict[Any, common.BinaryConfusionMatrix]:
+    """ Slices the data based on the input feature and compute the common.BinaryConfusionMatrix for each slice/.
+
+    Args:
+        dataframe:
+        feature:
+        label_column:
+        prediction_column:
+
+    Returns:
+
+    """
+    return {x[0]: common.BinaryConfusionMatrix(common.confusion_matrix_df(x[1], label_column, prediction_column)) for x
+            in dataframe.groupby(feature)}
+
+
+def summary_slice(dataframe: pd.DataFrame, feature: str, label_column: str,
+                  prediction_column: str = 'pred') -> pd.DataFrame:
+    """
+
+    Args:
+        dataframe:
+        feature:
+        label_column:
+        prediction_column:
+
+    Returns:
+
+    """
+    cm_dict = compute_performance_on_slice(dataframe, feature, label_column, prediction_column)
+    slice_perf = pd.concat(list(map(lambda x: x.to_df(), cm_dict.values())), ignore_index=True)
+    slice_perf.index = cm_dict.keys()
+    return slice_perf
 
 
 _DO_TRAINING = True
