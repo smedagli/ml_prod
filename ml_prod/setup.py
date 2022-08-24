@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name="starter",
+    name="ml_prod",
     version="0.0.0",
     description="Starter code.",
     author="Student",
