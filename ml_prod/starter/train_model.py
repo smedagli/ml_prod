@@ -204,19 +204,13 @@ if __name__ == '__main__':
     pred = model.predict(X_train)
     train_encoded['pred'] = pred
     train['pred'] = pred
+    train['label_encoded'] = train_encoded[label_column]
 
     cm = common.BinaryConfusionMatrix(common.confusion_matrix_df(train_encoded, label_column, 'pred'))
     print(cm.confusion_matrix)
     print(cm.to_df())
 
-    # slicing
-    for feature in ['sex']:
-        print(feature)
-        for slice_, df_slice in train_encoded.groupby(feature):
-            encoder_dict = get_encoder_dict_inv(encoders[feature])
-            print(encoder_dict[slice_])
-            cm_slice = common.BinaryConfusionMatrix(common.confusion_matrix_df(df_slice, label_column, 'pred'))
-            print(cm.confusion_matrix)
-            print(cm_slice.to_df())
-            print('\n')
-        print("--------------")
+    for category in cat_features:
+        print(category)
+        print(summary_slice(train, category, 'label_encoded', 'pred'))
+        print('\n')
