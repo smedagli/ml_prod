@@ -1,7 +1,6 @@
 """
 Script to train machine learning model.
 """
-from ml_prod.starter.ml.performance import summary_slice
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from typing import List, Dict
@@ -11,6 +10,7 @@ import pickle
 
 from ml_prod.starter import common
 from ml_prod.starter.ml.model import Model
+from ml_prod.starter.ml.performance import PerformanceEvaluator
 
 # TODO: remove this when complete
 pd.options.display.width = 2500
@@ -143,7 +143,8 @@ if __name__ == '__main__':
     print(cm.confusion_matrix)
     print(cm.to_df())
 
+    evaluator = PerformanceEvaluator(dataframe=train, label_column='label_encoded', prediction_column='pred')
     for category in cat_features:
         print(category)
-        print(summary_slice(train, category, 'label_encoded', 'pred'))
+        print(evaluator.get_summary_slice(category))
         print('\n')
