@@ -1,7 +1,7 @@
 """
 This module contains tools and functions to monitor performance of a model
 """
-from typing import Dict, Any
+from typing import Dict, Any, Union
 import pandas as pd
 
 from ml_prod.starter import common
@@ -28,11 +28,12 @@ class PerformanceEvaluator:
         return {x[0]: common.BinaryConfusionMatrix(common.confusion_matrix_df(x[1], label_column, prediction_column))
                 for x in self.df.groupby(feature)}
 
-    def get_summary_slice(self, feature: str) -> pd.DataFrame:
+    def get_summary_slice(self, feature: str, output_file: Union[str, None]) -> pd.DataFrame:
         """
 
         Args:
             feature:
+            output_file: if not None, writes the summary to the specified file
 
         Returns:
 
@@ -40,4 +41,7 @@ class PerformanceEvaluator:
         cm_dict = self.compute_performance_on_slice(feature)
         slice_perf = pd.concat(list(map(lambda x: x.to_df(), cm_dict.values())), ignore_index=True)
         slice_perf.index = cm_dict.keys()
+
+        if output_file:
+            slice_perf.to_csv(output_file)
         return slice_perf

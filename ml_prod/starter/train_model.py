@@ -57,6 +57,7 @@ if __name__ == '__main__':
 
     evaluator = PerformanceEvaluator(dataframe=train, label_column='label_encoded', prediction_column='pred')
     for category in cat_features:
+        output_file = str(Path(common.path_module) / 'data' / 'performance' / f'{category}_slice.csv')
         print(category)
-        print(evaluator.get_summary_slice(category))
+        print(evaluator.get_summary_slice(category, output_file=output_file))
         print('\n')
