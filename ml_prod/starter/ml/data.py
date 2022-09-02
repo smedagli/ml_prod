@@ -165,3 +165,25 @@ def set_encoders(dataframe: pd.DataFrame, categorical_features: List[str], label
             with open(output_file, 'wb') as encoder_file:
                 pickle.dump(temp_encoder, encoder_file)
     return out_encoders
+
+
+def load_encoders(categorical_features: List[str], label: str):
+    """ Loads the encoders saved in training phase
+
+    Args:
+        categorical_features:
+        label:
+
+    Returns:
+
+    """
+    input_folder = common.path_model
+    out_encoders = {}
+    for feature_ in categorical_features + [label]:
+        input_file = input_folder / f'enc_{feature_}.pkl'
+        print(f"Loading encoder for {feature_} from {input_file}")
+
+        with open(input_file, 'rb') as encoder_file:
+            temp_encoder = pickle.load(encoder_file)
+        out_encoders.update({feature_: temp_encoder})
+    return out_encoders
