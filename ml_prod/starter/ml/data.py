@@ -4,12 +4,15 @@ TODO:
     - add implementation of "process_data" as proposed by Udacity
 """
 import pickle
-from typing import List, Dict
+from typing import List, Dict, Union
 
 import numpy as np
 import pandas as pd
 from ml_prod.starter import common
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder, LabelEncoder
+
+
+EncoderType = Union[LabelEncoder, LabelBinarizer, OneHotEncoder]
 
 
 def process_data_udacity(
@@ -107,7 +110,7 @@ def read_data(filename: str = common.path_dataset):
 
 
 def process_data(dataframe: pd.DataFrame, *, categorical_features: List[str], label: str,
-                 encoder_dict_: Dict[str, LabelEncoder]) -> pd.DataFrame:
+                 encoder_dict_: Dict[str, EncoderType]) -> pd.DataFrame:
     """ Returns the input dataframe with categorical features and label encoded with the LabelEncoder defined in input.
 
     Args:
@@ -131,17 +134,38 @@ def process_data(dataframe: pd.DataFrame, *, categorical_features: List[str], la
     return output_df
 
 
-def get_encoder_dict(encoder_: LabelEncoder) -> Dict[str, int]:
+def get_encoder_dict(encoder_: EncoderType) -> Dict[str, int]:
     return {key: value for key, value in zip(encoder_.classes_, encoder_.transform(encoder_.classes_))}
 
 
-def get_encoder_dict_inv(encoder_: LabelEncoder) -> Dict[int, str]:
+def get_encoder_dict_inv(encoder_: EncoderType) -> Dict[int, str]:
     return {key: value for value, key in zip(encoder_.classes_, encoder_.transform(encoder_.classes_))}
 
 
-def set_encoders(dataframe: pd.DataFrame, categorical_features: List[str], label: str,
-                 save_encoders: bool = False) -> Dict[str, LabelEncoder]:
+def set_encoders(dataframe: pd.DataFrame, categorical_features: List[str], label: str, encoder_type: str = 'le',
+                 save_encoders: bool = False) -> Dict[str, EncoderType]:
+    """ Sets the encoders based on the encoder type specified
+
+    Args:
+        dataframe:
+        categorical_features:
+        label:
+        encoder_type: 'le' for LabelEncoder, 'ohe' for OneHotEncoder
+        save_encoders:
+
+    Returns:
+
     """
+    args = {'dataframe': dataframe, 'categorical_features': categorical_features,
+            'label': label, 'save_encoders': save_encoders}
+    if encoder_type:
+        return set_encoders_le(**args)
+    return set_encoders_ohe(**args)
+
+
+def set_encoders_le(dataframe: pd.DataFrame, categorical_features: List[str], label: str,
+                    save_encoders: bool = False) -> Dict[str, LabelEncoder]:
+    """ Sets the encoders using LabelEncoder
 
     Args:
         dataframe:
@@ -167,7 +191,38 @@ def set_encoders(dataframe: pd.DataFrame, categorical_features: List[str], label
     return out_encoders
 
 
-def load_encoders(categorical_features: List[str], label: str):
+def set_encoders_ohe(dataframe: pd.DataFrame, categorical_features: List[str], label: str,
+                     save_encoders: bool = False) -> Dict[str, Union[LabelBinarizer, OneHotEncoder]]:
+    """ Sets the encoders using OneHotEncoder
+
+    Args:
+        dataframe:
+        categorical_features:
+        label:
+        save_encoders: if True, save the encoders to a .pkl file
+
+    Returns:
+
+    """
+    output_folder_ = common.path_model
+    out_encoders = {}
+    for feature_ in categorical_features + [label]:
+        if feature_ == label:
+            temp_encoder = LabelBinarizer()
+        else:
+            temp_encoder = OneHotEncoder()
+        temp_encoder.fit(dataframe[feature_])
+        out_encoders.update({feature_: temp_encoder})
+
+        if save_encoders:
+            output_file = output_folder_ / f'enc_{feature_}.pkl'
+            print(f"Saving encoder for {feature_} in {output_file}")
+            with open(output_file, 'wb') as encoder_file:
+                pickle.dump(temp_encoder, encoder_file)
+    return out_encoders
+
+
+def load_encoders(categorical_features: List[str], label: str) -> Dict[str, EncoderType]:
     """ Loads the encoders saved in training phase
 
     Args:
