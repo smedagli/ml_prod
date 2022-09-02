@@ -5,6 +5,7 @@ from typing import Dict, Any, Union
 import pandas as pd
 
 from ml_prod.starter import common
+from sklearn.metrics import fbeta_score, precision_score, recall_score
 
 
 class PerformanceEvaluator:
