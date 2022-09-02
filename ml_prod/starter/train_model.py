@@ -5,7 +5,7 @@ TODO:
     - Optional enhancement, use K-fold cross validation instead of a train-test split.
 """
 from sklearn.model_selection import train_test_split
-from typing import List, Tuple
+from typing import List
 from pathlib import Path
 import pandas as pd
 
@@ -24,45 +24,37 @@ _ENCODER_TYPE = 'le'
 
 
 def train(model: Model, full_data: pd.DataFrame, train_data: pd.DataFrame, categorical_features: List[str], label: str,
-          encoder_type: str = 'le') -> Tuple[pd.DataFrame, pd.DataFrame]:
-    common_args = {'categorical_features': categorical_features, 'label': label}
-    encoders = data.set_encoders(dataframe=full_data, save_encoders=True, encoder_type=encoder_type,
+          encoder_type: str = 'le') -> pd.DataFrame:
+    common_args = {'categorical_features': categorical_features, 'label': label, 'encoder_type': encoder_type}
+    encoders = data.set_encoders(dataframe=full_data, save_encoders=True,
                                  **common_args)  # initialize LabelEncoders for features and label
 
-    train_encoded = data.process_data(train_data, encoder_dict_=encoders, **common_args)  # encode the input dataset
-    X_train = train_encoded[cat_features].to_numpy()
-    y_train = train_encoded[label_column].to_numpy()
+    x_train, y_train = data.process_data(train_data, encoder_dict_=encoders, **common_args)  # encode the input dataset
     # train
-    model.train(X_train, y_train)
+    model.train(x_train, y_train)
     model.save(model_file)
-    pred = model.predict(X_train)
+    pred = model.predict(x_train)
 
     out_dataset = train_data.copy()
-    out_dataset_encoded = train_encoded.copy()
     out_dataset['pred'] = pred
-    out_dataset['label_encoded'] = out_dataset_encoded[label_column]
-    out_dataset_encoded['pred'] = pred
-
-    return out_dataset, out_dataset_encoded
+    out_dataset['label_encoded'] = y_train
+    return out_dataset
 
 
-def test(model: Model, test_data: pd.DataFrame, categorical_features: List[str], label: str):
-    encoder_dict = data.load_encoders(**common_arguments)
+def test(model: Model, test_data: pd.DataFrame, categorical_features: List[str], label: str,
+         encoder_type: str = 'le') -> pd.DataFrame:
+    common_args = {'categorical_features': categorical_features, 'label': label, 'encoder_type': encoder_type}
+    encoder_dict = data.load_encoders(**common_args)
 
-    test_encoded = data.process_data(test_data, categorical_features=categorical_features, label=label,
-                                     encoder_dict_=encoder_dict)  # encode the input dataset
-    X_test = test_encoded[cat_features].to_numpy()
-    # y_test = test_encoded[label_column].to_numpy()
+    x_test, y_test = data.process_data(test_data, encoder_dict_=encoder_dict, **common_args)
     # infer
     model.load(model_file)
-    pred = model.predict(X_test)
+    pred = model.predict(x_test)
 
     out_dataset = test_data.copy()
-    out_dataset_encoded = test_encoded.copy()
     out_dataset['pred'] = pred
-    out_dataset['label_encoded'] = out_dataset_encoded[label_column]
-    out_dataset_encoded['pred'] = pred
-    return out_dataset, out_dataset_encoded
+    out_dataset['label_encoded'] = y_test
+    return out_dataset
 
 
 if __name__ == '__main__':
@@ -75,20 +67,19 @@ if __name__ == '__main__':
                     "native-country"]  # define categorical features
     label_column = 'salary'  # define label column
     cat_features = list(map(data.normalize_text, cat_features))
-    common_arguments = {'categorical_features': cat_features, 'label': label_column}
+    common_arguments = {'categorical_features': cat_features, 'label': label_column, 'encoder_type': _ENCODER_TYPE}
 
     # initialize model
     output_folder = Path(common.path_model)
     model_file = str((output_folder / 'model.pkl').resolve())
-    model_ = Model(verbose=_VERBOSE)
+    model_ = Model(verbose=_VERBOSE_MODEL)
 
     if _DO_TRAINING:  # train
         output_prefix = 'train'  # will be the prefix of output performance files
-        dataset, dataset_encoded = train(model=model_, full_data=data_, train_data=train_df,
-                                         encoder_type=_ENCODER_TYPE, **common_arguments)
+        dataset = train(model=model_, full_data=data_, train_data=train_df, **common_arguments)
     else:  # test
         output_prefix = 'test'  # will be the prefix of output performance files
-        dataset, dataset_encoded = test(model=model_, test_data=test_df, **common_arguments)
+        dataset = test(model=model_, test_data=test_df, **common_arguments)
 
     # performance evaluation
     cm = common.BinaryConfusionMatrix(common.confusion_matrix_df(dataset, 'label_encoded', 'pred'))
