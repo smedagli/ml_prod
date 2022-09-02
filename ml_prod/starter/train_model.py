@@ -91,7 +91,10 @@ if __name__ == '__main__':
         dataset, dataset_encoded = test(model=model_, test_data=test_df, **common_arguments)
 
     # performance evaluation
-    cm = common.BinaryConfusionMatrix(common.confusion_matrix_df(dataset_encoded, label_column, 'pred'))
+    cm = common.BinaryConfusionMatrix(common.confusion_matrix_df(dataset, 'label_encoded', 'pred'))
+    cm_output_file = str(Path(common.path_module) / 'data' / 'performance' / f'{output_prefix}_confusion_matrix.csv')
+    pd.DataFrame(cm.confusion_matrix).to_csv(cm_output_file)  # save confusion matrix
+
     if _VERBOSE:
         print(cm.confusion_matrix)
         print(cm.to_df())
