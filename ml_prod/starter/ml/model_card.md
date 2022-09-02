@@ -44,6 +44,8 @@ The method to encode categorical features can be specified with the option -e
 Alternatively "LE" (Label Encoder) can be used.
 This was the first way to encode labels tested and was kept as "legacy". 
 
+The trained model will be saved as `ml_prod/model/model.pkl`.
+
 
 ### Inference
 To predict the values on the test set run the script `train_model` with option `-t`
