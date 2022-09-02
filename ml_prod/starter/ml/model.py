@@ -1,4 +1,5 @@
 """
+Contains the implementation of the model
 TODO:
     - check if methods proposed from Udacity are completely covered
 """

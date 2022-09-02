@@ -1,4 +1,5 @@
 """
+Tools and functions to pre-process data
 TODO:
     - add implementation of "process_data" as proposed by Udacity
 """
