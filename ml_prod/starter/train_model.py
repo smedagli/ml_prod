@@ -29,7 +29,8 @@ if __name__ == '__main__':
     label_column = 'salary'
     cat_features = list(map(data.normalize_text, cat_features))
 
-    encoders = data.set_encoders(dataframe=train, categorical_features=cat_features, label=label_column, save_encoders=True)
+    encoders = data.set_encoders(dataframe=train, categorical_features=cat_features, label=label_column,
+                                 save_encoders=True)
     train_encoded = data.process_data(train, categorical_features=cat_features, label=label_column,
                                       encoder_dict_=encoders)
 

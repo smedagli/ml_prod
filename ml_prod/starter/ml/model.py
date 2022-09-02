@@ -1,3 +1,7 @@
+"""
+TODO:
+    - check if methods proposed from Udacity are completely covered
+"""
 import pickle
 
 import numpy as np
