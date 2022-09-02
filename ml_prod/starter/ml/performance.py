@@ -10,8 +10,14 @@ from sklearn.metrics import fbeta_score, precision_score, recall_score
 
 class PerformanceEvaluator:
     def __init__(self, dataframe: pd.DataFrame, label_column: str, prediction_column: str = 'pred'):
+        """
+
+        Args:
+            dataframe: the input dataset. It must include the label and prediction columns
+            label_column: column of the binary encoded labels
+            prediction_column: column of the binary encoded predictions
+        """
         self.df = dataframe
-        # self.feature = feature
         self.label_column = label_column
         self.prediction_column = prediction_column
 
@@ -19,9 +25,12 @@ class PerformanceEvaluator:
         """ Slices the data based on the input feature and compute the common.BinaryConfusionMatrix for each slice
 
         Args:
-            feature:
+            feature: the feature (column name) used to generate the data slices
 
         Returns:
+            a confusion matrix for each category of the selected feature.
+            The output is provided as dictionary with
+            {key: value} ---> {category for the slice: confusion matrix on the category}
 
         """
         label_column = self.label_column
@@ -30,13 +39,17 @@ class PerformanceEvaluator:
                 for x in self.df.groupby(feature)}
 
     def get_summary_slice(self, feature: str, output_file: Union[str, None]) -> pd.DataFrame:
-        """
+        """ Merges together the performance on each category for the input feature.
+        Each category has a different number of samples.
+        To get the total number of sample for each category is sufficient to sum up the number of true/false
+        positives/negatives (in the output dataframe ['tp', 'fp', 'tn', 'fn']
 
         Args:
-            feature:
+            feature: the feature (column name) used to generate the data slices
             output_file: if not None, writes the summary to the specified file
 
         Returns:
+            the summary of the performance for each category of the given slice (as pd.DataFrame)
 
         """
         cm_dict = self.compute_performance_on_slice(feature)

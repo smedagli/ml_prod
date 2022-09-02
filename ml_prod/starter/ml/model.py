@@ -1,7 +1,7 @@
 """
 Contains the implementation of the model
 TODO:
-    - check if methods proposed from Udacity are completely covered
+    - Optional: implement hyperparameter tuning.
 """
 import pickle
 
@@ -26,7 +26,9 @@ class Model:
             self.model = pickle.load(input_file)
 
     def train(self, x: np.array, y: np.array) -> None:
+        """ Training method """
         self.model.fit(X=x, y=y)
 
     def predict(self, x: np.array) -> np.array:
+        """ Inference method """
         return self.model.predict(x)
