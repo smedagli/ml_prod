@@ -14,16 +14,21 @@ class Model:
     TODO:
         - add docstring
     """
-    def __init__(self):
+    def __init__(self, verbose: bool = False):
         self.model = LogisticRegression()
+        self._verbose = verbose
 
     def save(self, filename: str) -> None:
         with open(filename, 'wb') as output_file:
             pickle.dump(obj=self.model, file=output_file)
+        if self._verbose:
+            print(f"Saving model in {filename}")
 
     def load(self, filename: str) -> None:
         with open(filename, 'rb') as input_file:
             self.model = pickle.load(input_file)
+        if self._verbose:
+            print(f"Loading model: {filename}")
 
     def train(self, x: np.array, y: np.array) -> None:
         """ Training method """
