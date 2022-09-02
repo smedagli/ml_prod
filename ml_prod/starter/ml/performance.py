@@ -45,3 +45,25 @@ class PerformanceEvaluator:
         if output_file:
             slice_perf.to_csv(output_file)
         return slice_perf
+
+
+def compute_model_metrics(y, preds):
+    """
+    Validates the trained machine learning model using precision, recall, and F1.
+
+    Inputs
+    ------
+    y : np.array
+        Known labels, binarized.
+    preds : np.array
+        Predicted labels, binarized.
+    Returns
+    -------
+    precision : float
+    recall : float
+    fbeta : float
+    """
+    fbeta = fbeta_score(y, preds, beta=1, zero_division=1)
+    precision = precision_score(y, preds, zero_division=1)
+    recall = recall_score(y, preds, zero_division=1)
+    return precision, recall, fbeta
