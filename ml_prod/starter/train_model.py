@@ -3,41 +3,17 @@ Script to train machine learning model.
 """
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
 from typing import List, Dict, Any
 from pathlib import Path
 import pandas as pd
-import numpy as np
 import pickle
 
 from ml_prod.starter import common
+from ml_prod.starter.ml.model import Model
 
 # TODO: remove this when complete
 pd.options.display.width = 2500
 pd.options.display.max_columns = 25
-
-
-class Model:
-    """
-    TODO:
-        - add docstring
-    """
-    def __init__(self):
-        self.model = LogisticRegression()
-
-    def save(self, filename: str) -> None:
-        with open(filename, 'wb') as output_file:
-            pickle.dump(obj=self.model, file=output_file)
-
-    def load(self, filename: str) -> None:
-        with open(filename, 'rb') as input_file:
-            self.model = pickle.load(input_file)
-
-    def train(self, x: np.array, y: np.array) -> None:
-        self.model.fit(X=x, y=y)
-
-    def predict(self, x: np.array) -> np.array:
-        return self.model.predict(x)
 
 
 def normalize_text(text: str) -> str:
