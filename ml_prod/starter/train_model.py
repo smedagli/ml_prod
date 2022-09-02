@@ -113,16 +113,8 @@ if __name__ == '__main__':
     # Optional enhancement, use K-fold cross validation instead of a train-test split.
     train, test = train_test_split(data, test_size=0.20)
 
-    cat_features = [
-        "workclass",
-        "education",
-        "marital-status",
-        "occupation",
-        "relationship",
-        "race",
-        "sex",
-        "native-country",
-        ]
+    cat_features = ["workclass", "education", "marital-status", "occupation", "relationship", "race", "sex",
+                    "native-country"]
     label_column = 'salary'
     cat_features = list(map(normalize_text, cat_features))
 
