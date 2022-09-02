@@ -34,6 +34,7 @@ The implementation of the model and of the functions used for training lies in `
 +---ml
 |   |   data.py
 |   |   model.py
+|   |   model_card.md
 |   |   performance.py
 |   |   __init__.py
 |   |
@@ -43,7 +44,7 @@ The implementation of the model and of the functions used for training lies in `
 * `common.py`:
 contains common tools, function and paths for the project
 * `train_model.py`:
-Script to train machine learning model
+Script to train machine learning model (and also to do inference)
 * `ml/data.py`:
 tools and functions to pre-process data
 * `ml/model.py`:
