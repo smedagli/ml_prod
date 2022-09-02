@@ -42,8 +42,8 @@ def read_data(filename: str = common.path_dataset):
     return df
 
 
-def process_data(dataframe: pd.DataFrame, *, categorical_features: List[str], label: str,
-                 encoder_dict_: Dict[str, EncoderType]) -> pd.DataFrame:
+def process_data(dataframe: pd.DataFrame, categorical_features: List[str], label: str,
+                 encoder_dict_: Dict[str, EncoderType], encoder_type: str = 'le') -> Tuple[np.array, np.array]:
     """ Returns the input dataframe with categorical features and label encoded with the LabelEncoder defined in input.
 
     Args:
@@ -52,19 +52,57 @@ def process_data(dataframe: pd.DataFrame, *, categorical_features: List[str], la
         label: target column
         encoder_dict_: dictionary with keys the name of the columns to encode (features and label) and values the
                       corresponding encoder
+        encoder_type:
 
     Returns:
         encoded dataframe of features and label
 
     """
+    args = {'dataframe': dataframe, 'categorical_features': categorical_features, 'label': label,
+            'encoder_dict': encoder_dict_}
+    if encoder_type == 'le':
+        return _process_data_le(**args)
+    return _process_data_ohe(**args)
+
+
+def _process_data_ohe(dataframe: pd.DataFrame, categorical_features: List[str], label: str,
+                      encoder_dict: Dict[str, EncoderType]):
+    """ Data pre-processing for OneHotEncoder
+
+    Returns:
+
+    """
+    # scaler = StandardScaler()
+    enc_features = encoder_dict['categorical'].transform(dataframe[categorical_features])
+    enc_labels = encoder_dict['label'].transform(dataframe[label])
+
+    numeric_features = dataframe.drop(categorical_features + [label], axis=1).values
+    return np.concatenate([enc_features, numeric_features], axis=1), enc_labels
+
+
+def _process_data_le(dataframe: pd.DataFrame, categorical_features: List[str], label: str,
+                     encoder_dict: Dict[str, EncoderType]) -> Tuple[np.array, np.array]:
+    """ Data pre-processing for LabelEncoder
+
+    Args:
+        dataframe:
+        categorical_features:
+        label:
+        encoder_dict: dictionary with keys the name of the columns to encode (features and label) and values the
+                      corresponding encoder
+
+    Returns:
+
+    """
     output_df = dataframe.copy()
     for feature_ in categorical_features + [label]:
-        encoder_ = encoder_dict_[feature_]
-        # temp_encoder = LabelEncoder()
-        # output_df[feature] = temp_encoder.fit_transform(dataframe[feature])
+        encoder_ = encoder_dict[feature_]
         output_df[feature_] = encoder_.transform(dataframe[feature_])
+    x = output_df[categorical_features].values
+    y = output_df[label].values
 
-    return output_df
+    numeric_features = dataframe.drop(categorical_features + [label], axis=1).values
+    return np.concatenate([x, numeric_features], axis=1), y
 
 
 def get_encoder_dict(encoder_: EncoderType) -> Dict[str, int]:
