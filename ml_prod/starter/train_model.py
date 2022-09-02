@@ -1,7 +1,6 @@
 """
 Script to train machine learning model.
 TODO:
-    - test case of OneHotEncoder
     - Optional enhancement, use K-fold cross validation instead of a train-test split.
 """
 from sklearn.model_selection import train_test_split
@@ -79,7 +78,7 @@ if __name__ == '__main__':
     # main
     data_ = data.read_data()
 
-    train_df, test_df = train_test_split(data_, test_size=0.20)  # split dataset
+    train_df, test_df = train_test_split(data_, test_size=0.20, random_state=42)  # split dataset
 
     cat_features = ["workclass", "education", "marital-status",
                     "occupation", "relationship", "race", "sex",
