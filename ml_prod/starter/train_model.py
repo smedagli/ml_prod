@@ -6,7 +6,6 @@ TODO:
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 import pandas as pd
-import argparse
 
 from ml_prod.starter import common
 from ml_prod.starter.ml.model import Model
@@ -14,32 +13,7 @@ from ml_prod.starter.ml.performance import PerformanceEvaluator
 from ml_prod.starter.ml import data, encoders
 
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--test', action='store_true', default=False,
-                        help='Do testing (inference) instead of training')
-    parser.add_argument('-v', '--verbose', default=1, help='Set level of verbosity (0 to 2)')
-    parser.add_argument('-e', '--encoder_type', default='OHE', type=str,
-                        help='Encoding for categorical features: OHE (One Hot Encoding) or LE (Label Encoder)')
-    return parser.parse_args()
-
-
-if __name__ == '__main__':
-    # args = parse_args()
-    # _DO_TRAINING = not args.test
-    #
-    # # verbosity
-    # verbosity = int(args.verbose)
-    # _VERBOSE, _VERBOSE_MODEL = False, False
-    # if verbosity == 0:
-    #     pass
-    # elif verbosity == 1:
-    #     _VERBOSE_MODEL = True
-    # elif verbosity == 2:
-    #     _VERBOSE, _VERBOSE_MODEL = True, True
-    #
-    # _ENCODER_TYPE = args.encoder_type
-
+def main():
     # read data
     data_ = data.read_data()
 
@@ -86,9 +60,15 @@ if __name__ == '__main__':
 
         cm.update({key: common.BinaryConfusionMatrix(common.confusion_matrix_df(df, 'label_encoded', 'pred'))})
         cm_output_file = str(Path(common.path_module) / 'data' / 'performance' / f'{key}_confusion_matrix.csv')
+        if not Path(cm_output_file).parent.is_dir():
+            Path(cm_output_file).parent.mkdir(parents=True)
         pd.DataFrame(cm[key].confusion_matrix).to_csv(cm_output_file)  # save confusion matrix
 
         evaluator = PerformanceEvaluator(dataframe=df, label_column='label_encoded', prediction_column='pred')
         for category in cat_features:
             output_file = str(Path(common.path_module) / 'data' / 'performance' / f'{key}_{category}_slice.csv')
             evaluator.get_summary_slice(category, output_file)
+
+
+if __name__ == '__main__':
+    main()
