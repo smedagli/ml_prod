@@ -8,6 +8,8 @@ import pickle
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
+from ml_prod.starter import common
+
 
 class Model:
     """
@@ -18,13 +20,13 @@ class Model:
         self.model = LogisticRegression()
         self._verbose = verbose
 
-    def save(self, filename: str) -> None:
+    def save(self, filename: str = str(common.path_model / 'model.pkl')) -> None:
         with open(filename, 'wb') as output_file:
             pickle.dump(obj=self.model, file=output_file)
         if self._verbose:
             print(f"Saving model in {filename}")
 
-    def load(self, filename: str) -> None:
+    def load(self, filename: str = str(common.path_model / 'model.pkl')) -> None:
         with open(filename, 'rb') as input_file:
             self.model = pickle.load(input_file)
         if self._verbose:
