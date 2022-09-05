@@ -33,6 +33,7 @@ The implementation of the model and of the functions used for training lies in `
 |
 +---ml
 |   |   data.py
+|   |   encoders.py
 |   |   model.py
 |   |   model_card.md
 |   |   performance.py
@@ -47,6 +48,8 @@ contains common tools, function and paths for the project
 Script to train machine learning model (and also to do inference)
 * `ml/data.py`:
 tools and functions to pre-process data
+* `ml/encoders.py`:
+tools and functions to manage encoders for categorical variables
 * `ml/model.py`:
 the implementation of the model
 * `ml.performance.py`:
