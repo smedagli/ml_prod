@@ -15,6 +15,9 @@ class Encoder:
         label_out_file = output_folder / 'label_enc.pkl'
         feature_out_file = output_folder / 'cat_enc.pkl'
 
+        if not output_folder.is_dir():
+            output_folder.mkdir(parents=True)
+
         with open(label_out_file, 'wb') as label_file:
             pickle.dump(obj=self.label_encoder, file=label_file)
 

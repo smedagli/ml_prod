@@ -3,6 +3,7 @@ This module contains tools and functions to monitor performance of a model
 """
 from typing import Dict, Any, Union
 import pandas as pd
+from pathlib import Path
 
 from ml_prod.starter import common
 from sklearn.metrics import fbeta_score, precision_score, recall_score
@@ -57,6 +58,8 @@ class PerformanceEvaluator:
         slice_perf.index = cm_dict.keys()
 
         if output_file:
+            if not Path(output_file).parent.is_dir():
+                Path(output_file).mkdir(parents=True)
             slice_perf.to_csv(output_file)
         return slice_perf
 
