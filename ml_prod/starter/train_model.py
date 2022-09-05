@@ -5,9 +5,11 @@ TODO:
 """
 from sklearn.model_selection import train_test_split
 from typing import List
+from typing import List, Tuple
 from pathlib import Path
 import pandas as pd
 import argparse
+import numpy as np
 
 from ml_prod.starter import common
 from ml_prod.starter.ml.model import Model
@@ -34,7 +36,7 @@ def train(model: Model, full_data: pd.DataFrame, train_data: pd.DataFrame, categ
     x_train, y_train = data.process_data(train_data, encoder_dict_=encoders, **common_args)  # encode the input dataset
     # train
     model.train(x_train, y_train)
-    model.save(model_file)
+    model.save(common.path_model / 'model.pkl')
     pred = model.predict(x_train)
 
     out_dataset = train_data.copy()
@@ -43,15 +45,23 @@ def train(model: Model, full_data: pd.DataFrame, train_data: pd.DataFrame, categ
     return out_dataset
 
 
-def test(model: Model, test_data: pd.DataFrame, categorical_features: List[str], label: str,
+def test(model_file: str, test_data: pd.DataFrame, categorical_features: List[str], label: str,
          encoder_type: str = 'le') -> pd.DataFrame:
     common_args = {'categorical_features': categorical_features, 'label': label, 'encoder_type': encoder_type}
     encoder_dict = data.load_encoders(**common_args)
 
     x_test, y_test = data.process_data(test_data, encoder_dict_=encoder_dict, **common_args)
     # infer
+    model = Model()
     model.load(model_file)
     pred = model.predict(x_test)
+    return np.array(pred), np.array(y_test)
+
+
+def test_to_df(model_file: str, test_data: pd.DataFrame, categorical_features: List[str], label: str,
+               encoder_type: str = 'le') -> pd.DataFrame:
+    """ Returns the predictions as a dataframe """
+    pred, y_test = test(model_file, test_data, categorical_features, label, encoder_type)
 
     out_dataset = test_data.copy()
     out_dataset['pred'] = pred

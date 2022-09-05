@@ -217,7 +217,7 @@ def load_encoders_le(categorical_features: List[str], label: str) -> Dict[str, L
     return out_encoders
 
 
-def load_encoders_ohe() -> Dict[str, EncoderType]:
+def load_encoders_ohe(skip_label: bool = False) -> Dict[str, EncoderType]:
     """ Loads the encoders saved in traning phase (for OneHotEncoder) """
     input_folder = common.path_model
     category_input_file = input_folder / 'ohe_cat_encoders.pkl'
@@ -225,6 +225,8 @@ def load_encoders_ohe() -> Dict[str, EncoderType]:
 
     with open(category_input_file, 'rb') as encoder_file:
         categorical_encoder = pickle.load(encoder_file)
+    if skip_label:
+        return {'categorical': categorical_encoder, 'label': None}
     with open(label_input_file, 'rb') as encoder_file:
         label_encoder = pickle.load(encoder_file)
     return {'categorical': categorical_encoder, 'label': label_encoder}
