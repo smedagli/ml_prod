@@ -36,34 +36,19 @@ python -m ml_prod.starter.train_model
 ```
 the script will write the performance of the model (see details below) in the folder `ml_prod/data/performance`,
 and will also save the feature encoders in `ml_prod/model`.
-The encoders strongly depend on the method to encode categorical features.
-
-The method to encode categorical features can be specified with the option -e
-(by default is set to "OHE" for One Hot Encoding).
-
-Alternatively "LE" (Label Encoder) can be used.
-This was the first way to encode labels tested and was kept as "legacy". 
 
 The trained model will be saved as `ml_prod/model/model.pkl`.
 
 
 ### Inference
-To predict the values on the test set run the script `train_model` with option `-t`
-```commandline
-python -m ml_prod.starter.train_model -t
-```
-the script will write the performance of the model (see details below) in the folder `ml_prod/data/performance`.
-
-Since the script will load the feature encoders automatically from `ml_prod/model`,
-it is important to specify the `-e` option according to the latest encoding used in training phase.
-
+TODO
 
 ## Dataset
 The complete dataset can be found in `ml_prod/data/census.csv`
 
 ### Training data and Evaluation data
 Training and test data split are generated with `from sklearn.model_selection import train_test_split`.  
-See `starter.train_model.py` at line 81
+See `starter.train_model.py` at line 21
 ```python
 train_df, test_df = train_test_split(data_, test_size=0.20, random_state=42)  # split dataset
 ```
