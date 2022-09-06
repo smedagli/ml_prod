@@ -16,11 +16,11 @@ from ml_prod.starter.ml import data, model, encoders
 
 
 # Load model
-model_ = model.Model()
+model_ = model.Model(verbose=False)
 model_.load()
 
 # Load encoder
-encoder = encoders.Encoder()
+encoder = encoders.Encoder(verbose=False)
 encoder.load()
 
 cat_features = ["workclass", "education", "marital-status", "occupation", "relationship", "race",
