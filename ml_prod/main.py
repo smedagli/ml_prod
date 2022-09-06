@@ -13,8 +13,6 @@ from typing import Union
 import sys
 sys.path.append('../')
 from ml_prod.starter.ml import data, model, encoders
-from ml_prod.starter import train_model as tm
-from ml_prod.schema import ModelInput
 
 
 # Load model
@@ -64,4 +62,4 @@ async def predict(input_sample: Example, age: Union[int, None] = None, education
 
 @app.get("/")
 async def home():
-    return {"home": "This is the home; to run inference, insert URL 'http://127.0.0.1:8000/inference"}
+    return {"home": "This is the home; to run inference, insert URL 'http://127.0.0.1:8000/predict"}
