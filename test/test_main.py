@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 import sys
 sys.path.append('..')
-from ml_prod.main import app
+from main import app
 
 client = TestClient(app)
 

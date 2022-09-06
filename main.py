@@ -12,7 +12,7 @@ from typing import Union
 
 import sys
 sys.path.append('../')
-from ml_prod.starter.ml import data, model, encoders
+from starter.ml import data, model, encoders
 
 
 # Load model

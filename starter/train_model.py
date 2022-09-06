@@ -7,10 +7,10 @@ from sklearn.model_selection import train_test_split
 from pathlib import Path
 import pandas as pd
 
-from ml_prod.starter import common
-from ml_prod.starter.ml.model import Model
-from ml_prod.starter.ml.performance import PerformanceEvaluator
-from ml_prod.starter.ml import data, encoders
+from starter import common
+from starter.ml.model import Model
+from starter.ml.performance import PerformanceEvaluator
+from starter.ml import data, encoders
 
 
 def main():

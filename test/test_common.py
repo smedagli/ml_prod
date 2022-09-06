@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from ml_prod.starter import common
+from starter import common
 
 
 class test_common(unittest.TestCase):

@@ -2,7 +2,7 @@ from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 import pickle
 from pathlib import Path
 
-from ml_prod.starter import common
+from starter import common
 
 
 class Encoder:

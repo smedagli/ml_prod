@@ -1,6 +1,6 @@
 import unittest
 
-from ml_prod.starter.ml import data as data_mod
+from starter.ml import data as data_mod
 
 
 class TestData(unittest.TestCase):

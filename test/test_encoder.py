@@ -1,7 +1,5 @@
 import unittest
 
-from ml_prod.starter.ml import encoders
-
 
 class TestData(unittest.TestCase):
     def test_column_names(self):
