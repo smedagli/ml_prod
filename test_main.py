@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-import sys
 
 from main import app
 
