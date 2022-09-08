@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder, LabelEncoder
 
-from starter import common
-from starter.ml.encoders import Encoder
+from .. import common
+from ..ml.encoders import Encoder
 
 EncoderType = Union[LabelEncoder, LabelBinarizer, OneHotEncoder]
 
