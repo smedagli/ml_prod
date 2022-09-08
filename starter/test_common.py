@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from starter import common
+from . import common
 
 
 class test_common(unittest.TestCase):
