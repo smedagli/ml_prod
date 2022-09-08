@@ -15,11 +15,6 @@ import sys
 sys.path.append('../')
 from starter.ml import data, model, encoders
 
-if "DYNO" in os.environ and os.path.isdir(".dvc"):
-    os.system("dvc config core.no_scm true")
-    if os.system("dvc pull") != 0:
-        exit("dvc pull failed")
-    os.system("rm -r .dvc .apt/usr/lib/dvc")
 
 # Load model
 # model_ = model.Model(verbose=False)
@@ -68,4 +63,4 @@ app = FastAPI()
 
 @app.get("/")
 async def home():
-    return {"home": "This is the home; to run inference, insert URL 'http://127.0.0.1:8000/predict"}
+    return {"Welcome": "This is the home"}
