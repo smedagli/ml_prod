@@ -6,7 +6,6 @@ import pandas as pd
 from sklearn import metrics
 from pathlib import Path
 
-import ml_prod
 
 _EPSILON_VAL = pow(10, -6)  # add this to resolve division by 0
 
@@ -91,6 +90,6 @@ def confusion_matrix_df(dataframe: pd.DataFrame, label: str, pred_column: str = 
                                     labels=[False, True])
 
 
-path_module = Path(ml_prod.__file__).parent.resolve()
+path_module = Path(__file__).parent.parent.resolve()
 path_dataset = path_module / 'data' / 'census.csv'
 path_model = path_module / 'model'
