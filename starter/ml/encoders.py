@@ -2,7 +2,9 @@ from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 import pickle
 from pathlib import Path
 
-from starter import common
+
+_module_path = Path(__file__).parent.parent.parent.resolve()
+_model_path = _module_path / 'model'
 
 
 class Encoder:
@@ -11,7 +13,7 @@ class Encoder:
         self.categorical_features_encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
         self._verbose = verbose
 
-    def save(self, output_folder: Path = common.path_model) -> None:
+    def save(self, output_folder: Path = _model_path) -> None:
         label_out_file = output_folder / 'label_enc.pkl'
         feature_out_file = output_folder / 'cat_enc.pkl'
 
@@ -27,7 +29,7 @@ class Encoder:
         if self._verbose:
             print(f"Saved encoders in {label_out_file.resolve()} and {feature_out_file.resolve()}")
 
-    def load(self, input_folder: Path = common.path_model) -> None:
+    def load(self, input_folder: Path = _model_path) -> None:
         label_in_file = input_folder / 'label_enc.pkl'
         feature_in_file = input_folder / 'cat_enc.pkl'
 

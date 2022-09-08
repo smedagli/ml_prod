@@ -4,11 +4,13 @@ TODO:
     - Optional: implement hyperparameter tuning.
 """
 import pickle
+from pathlib import Path
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-from starter import common
+
+_module_path = Path(__file__).parent.parent.parent.resolve()
 
 
 class Model:
@@ -20,13 +22,13 @@ class Model:
         self.model = LogisticRegression()
         self._verbose = verbose
 
-    def save(self, filename: str = str(common.path_model / 'model.pkl')) -> None:
+    def save(self, filename: str = str(_module_path / 'model' / 'model.pkl')) -> None:
         with open(filename, 'wb') as output_file:
             pickle.dump(obj=self.model, file=output_file)
         if self._verbose:
             print(f"Saving model in {filename}")
 
-    def load(self, filename: str = str(common.path_model / 'model.pkl')) -> None:
+    def load(self, filename: str = str(_module_path / 'model' / 'model.pkl')) -> None:
         with open(filename, 'rb') as input_file:
             self.model = pickle.load(input_file)
         if self._verbose:
