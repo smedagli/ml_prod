@@ -5,6 +5,8 @@ PUT: update data
 DELETE: delete data
 """
 # Put the code for your API here.
+import os
+
 import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
@@ -14,6 +16,7 @@ import sys
 sys.path.append('../')
 from starter.ml import data, model, encoders
 
+os.system('python -m strarter.train_model')
 
 # Load model
 model_ = model.Model(verbose=False)

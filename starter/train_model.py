@@ -43,7 +43,7 @@ def main():
         y.update({key: y_encoded})
 
     # load model
-    model = Model()
+    model = Model(verbose=True)
 
     # train
     model.train(x['train'], y['train'])
